@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 
 namespace advent_of_code_2017
 {
@@ -11,6 +12,8 @@ namespace advent_of_code_2017
 
             // Day02.task1();
             // Day02.task2();
+
+            Day03.task1();
         }
     }
 }
