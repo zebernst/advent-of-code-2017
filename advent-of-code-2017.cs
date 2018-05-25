@@ -6,8 +6,10 @@ namespace advent_of_code_2017
     {
         static void Main(string[] args)
         {
-            Day01.task1();
-            Day01.task2();
+            // Day01.task1();
+            // Day01.task2();
+
+            Day02.task1();
         }
     }
 }
