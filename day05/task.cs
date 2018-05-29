@@ -20,7 +20,30 @@ class Day05 {
             currentIdx += jumpDist;
             numSteps++;
         }
-        
+
+        Console.WriteLine($"# of steps taken: {numSteps}");
+    }
+
+    public static void task2() {
+        var input = new List<int>();
+        using (StreamReader sr = new StreamReader("day05\\input.txt")) {
+            while (!sr.EndOfStream) {
+                input.Add(Int32.Parse(sr.ReadLine()));
+            }
+        }
+
+        int currentIdx = 0, numSteps = 0;
+        while (currentIdx < input.Count && currentIdx >= 0) {
+            int jumpDist = input[currentIdx];
+            if (jumpDist >= 3)
+                input[currentIdx]--;
+            else
+                input[currentIdx]++;
+
+            currentIdx += jumpDist;
+            numSteps++;
+        }
+
         Console.WriteLine($"# of steps taken: {numSteps}");
     }
 }
