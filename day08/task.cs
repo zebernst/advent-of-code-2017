@@ -70,7 +70,52 @@ public static class Day08 {
                 }
             }
         }
-        
+
         Console.WriteLine($"largest value in any register: {registers.Select(r => r.value).Max()}");
+    }
+
+    public static void task2() {
+        var registers = new List<Register>();
+        var instructions = new List<Match>();
+        var memValues = new List<int>();
+        using (StreamReader sr = new StreamReader("day08\\input.txt")) {
+            while (!sr.EndOfStream) {
+                var input = sr.ReadLine();
+                Regex re = new Regex(@"^(\w+)\s(inc|dec)\s(-?\d+)\sif\s(\w+)\s([<>=!]{1,2})\s(-?\d+)$");
+                var m = re.Match(input);
+
+                var search = registers.Where(rg => rg.name.Equals(m.Groups[1].Value));
+                if (!search.Any())
+                    registers.Add(new Register(name: m.Groups[1].Value));
+
+                instructions.Add(m);
+            }
+        }
+
+        for (int i = 0; i < instructions.Count; i++) {
+            var m = instructions[i];
+
+            var operation = m.Groups[2].Value;
+            var value = int.Parse(m.Groups[3].Value);
+            var queryType = m.Groups[5].Value;
+            var queryValue = int.Parse(m.Groups[6].Value);
+
+            var targetRegister = registers.Where(r => r.name == m.Groups[1].Value).Single();
+            var queryRegister = registers.Where(r => r.name == m.Groups[4].Value).Single();
+
+            int newValue;
+            if (queryType.Operator(queryRegister.value, queryValue)) {
+                switch (operation) {
+                    case "inc": newValue = targetRegister.value + value; break;
+                    case "dec": newValue = targetRegister.value - value; break;
+                    default: newValue = 0; break;
+                }
+
+                memValues.Add(newValue);
+                targetRegister.value = newValue;
+            }
+        }
+
+        Console.WriteLine($"highest memory value ever reached: {memValues.Max()}");
     }
 }
