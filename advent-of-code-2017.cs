@@ -29,7 +29,9 @@ namespace advent_of_code_2017
             // Day07.task2();
 
             // Day08.task1();
-            Day08.task2();
+            // Day08.task2();
+
+            Day09.task1();
         }
     }
 }
