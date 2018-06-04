@@ -82,6 +82,46 @@ class Day12
         Console.WriteLine($"number of programs in the group with program id 0: {count}");
     }
 
+    public static void task2() 
+    {
+        var town = new HashSet<Program>();
+        using (var sr = new StreamReader("day12\\input.txt"))
+        {
+            while (!sr.EndOfStream)
+            {
+                var line = sr.ReadLine();
+                Regex re = new Regex(@"^(\d+) <-> (.*)");
+                var m = re.Match(line);
+
+                var src = int.Parse(m.Groups[1].Value);
+                var dests = m.Groups[2].Value.Split(", ").Select(v => int.Parse(v));      
+
+                var srcExists = town.Where(o => o.id.Equals(src)).Any();
+                var p = srcExists ? town.Where(o => o.id.Equals(src)).Single() : new Program(id:src);
+                if (!srcExists) town.Add(p);
+
+                foreach (var dest in dests) 
+                {
+                    if (src.Equals(dest)) continue;
+                    var destExists = town.Where(o => o.id.Equals(dest)).Any();
+                    var d = destExists ? town.Where(o => o.id.Equals(dest)).Single() : new Program(id:dest);
+                    if (!destExists) town.Add(d);
+                    p.communications.Add(d);
+                }
+            }
+        }
+
+        var townPool = new HashSet<Program>(town);
+        int count = 0;
+        while (townPool.Any())
+        {
+            separateGroup(townPool.First(), ref townPool);
+            ++count;
+        }
+        
+        Console.WriteLine($"number of distinct communities: {count}");
+    }
+
     private static void countGroup(Program root, ref int count, ref List<int> visited)
     {
         ++count;
@@ -91,6 +131,16 @@ class Day12
         {
             if (visited.Contains(p.id)) continue;
             countGroup(p, ref count, ref visited);
+        }
+    }
+
+    private static void separateGroup(Program root, ref HashSet<Program> townPool)
+    {
+        townPool.Remove(root);
+        foreach (var p in root.communications)
+        {
+            if (!townPool.Contains(p)) continue;
+            separateGroup(p, ref townPool);
         }
     }
 }
